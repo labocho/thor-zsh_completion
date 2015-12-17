@@ -18,7 +18,6 @@ __generator_spec() {
         subcommands)
           _values \
             'subcommand' \
-            'zsh-completion[Print zsh completion script]' \
             'foo[Description of foo]' \
             'nest1[Description of nest1]' \
             ;
@@ -27,9 +26,6 @@ __generator_spec() {
       ;;
     *)
       case $words[$DEPTH] in
-        zsh-completion)
-          __generator_spec_zsh-completion
-          ;;
         foo)
           __generator_spec_foo
           ;;
@@ -46,20 +42,6 @@ __generator_spec() {
   esac
 }
 
-
-__generator_spec_zsh-completion() {
-  _arguments \
-    {--global} \
-    {--name,-n} \
-    '*: :->rest'
-
-  case $state in
-    rest)
-      # complete rest arguments
-      _files
-      ;;
-  esac
-}
 
 __generator_spec_foo() {
   _arguments \

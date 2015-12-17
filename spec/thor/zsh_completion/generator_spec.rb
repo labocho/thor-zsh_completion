@@ -22,7 +22,6 @@ describe Thor::ZshCompletion::Generator do
     end
 
     main = Class.new(Thor) do
-      include Thor::ZshCompletion::Command
       class_option :global, description: "Global option"
 
       desc "foo", "Description of foo"
