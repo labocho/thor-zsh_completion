@@ -1,0 +1,11 @@
+#compdef <%= name %>
+
+local state
+
+_<%= name %>() {
+  __<%= name %>
+}
+
+<%= render_subcommand_function(main) %>
+
+compdef _<%= name %> <%= name %>

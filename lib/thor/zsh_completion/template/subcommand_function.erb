@@ -1,0 +1,55 @@
+<%- if subcommand[:subcommands].any? %>
+<%= function_name %>() {
+  readonly local DEPTH=<%= depth %>
+
+  case $CURRENT in
+    $DEPTH)
+      _arguments \
+        <%- subcommand[:options].each do |option| -%>
+        {<%= option[:names].join(",") %>}<%= option[:description].gsub(/'/, "''") if option[:description] %> \
+        <%- end -%>
+        '*: :->subcommands'
+
+      case $state in
+        subcommands)
+          _values \
+            'subcommand' \
+            <%- subcommand[:subcommands].each do |subcommand| -%>
+            '<%= subcommand[:name] %>[<%= subcommand[:description].gsub(/'/, "''") %>]' \
+            <%- end -%>
+            ;
+          ;;
+      esac
+      ;;
+    *)
+      case $words[$DEPTH] in
+        <%- subcommand[:subcommands].each do |subcommand| -%>
+        <%= subcommand[:name] %>)
+          <%= function_name %>_<%= subcommand[:name] %>
+          ;;
+        <%- end -%>
+        *)
+          # if does not match any subcommand
+          # complete rest arguments
+          _files
+          ;;
+      esac
+      ;;
+  esac
+}
+<%- else %>
+<%= function_name %>() {
+  _arguments \
+    <%- subcommand[:options].each do |option| -%>
+    {<%= option[:names].join(",") %>}<%= option[:description].gsub(/'/, "''") if option[:description] %> \
+    <%- end -%>
+    '*: :->rest'
+
+  case $state in
+    rest)
+      # complete rest arguments
+      _files
+      ;;
+  esac
+}
+<%- end %>
