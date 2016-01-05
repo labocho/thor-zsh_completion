@@ -35,7 +35,7 @@ describe Thor::ZshCompletion::Generator do
     end
   }
 
-  let(:expected) { File.read("#{__dir__}/generator_spec.zsh") }
+  let(:expected) { File.read("#{File.dirname(__FILE__)}/generator_spec.zsh") }
 
   subject { Thor::ZshCompletion::Generator.new(thor, "generator_spec").generate }
 
