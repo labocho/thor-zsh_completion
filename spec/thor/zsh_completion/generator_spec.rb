@@ -22,7 +22,7 @@ describe Thor::ZshCompletion::Generator do
     end
 
     main = Class.new(Thor) do
-      class_option :global, description: "Global option"
+      class_option :global, desc: "Global option"
 
       desc "foo", "Description of foo"
       def foo
@@ -41,4 +41,3 @@ describe Thor::ZshCompletion::Generator do
 
   it { should eq expected }
 end
-
