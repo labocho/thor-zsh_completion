@@ -90,8 +90,17 @@ class Thor
 
       def option_metadata(option)
         { names: ["--#{option.name}"] + option.aliases.map{|a| "-#{a}" },
-          description: "\"[#{option.description}]\"",
+          description: option.description,
         }
+      end
+
+      def quote(s)
+        escaped = s.gsub(/'/, "''")
+        %('#{escaped}')
+      end
+
+      def bracket(s)
+        %([#{s}])
       end
     end
   end

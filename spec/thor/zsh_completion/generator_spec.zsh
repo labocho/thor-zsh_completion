@@ -45,7 +45,7 @@ __generator_spec() {
 
 __generator_spec_foo() {
   _arguments \
-    {--global}"[Global option]" \
+    {--global}'[Global option]' \
     '*: :->rest'
 
   case $state in
@@ -62,7 +62,7 @@ __generator_spec_nest1() {
   case $CURRENT in
     $DEPTH)
       _arguments \
-        {--global}"[Global option]" \
+        {--global}'[Global option]' \
         '*: :->subcommands'
 
       case $state in

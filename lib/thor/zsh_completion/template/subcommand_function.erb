@@ -6,7 +6,7 @@
     $DEPTH)
       _arguments \
         <%- subcommand[:options].each do |option| -%>
-        {<%= option[:names].join(",") %>}<%= option[:description].gsub(/'/, "''") if option[:description] %> \
+        {<%= option[:names].join(",") %>}<%= quote(bracket(option[:description])) if option[:description] %> \
         <%- end -%>
         '*: :->subcommands'
 
@@ -15,7 +15,7 @@
           _values \
             'subcommand' \
             <%- subcommand[:subcommands].each do |subcommand| -%>
-            '<%= subcommand[:name] %>[<%= subcommand[:description].gsub(/'/, "''") %>]' \
+            <%= quote(subcommand[:name] + bracket(subcommand[:description])) %> \
             <%- end -%>
             ;
           ;;
@@ -41,7 +41,7 @@
 <%= function_name %>() {
   _arguments \
     <%- subcommand[:options].each do |option| -%>
-    {<%= option[:names].join(",") %>}<%= option[:description].gsub(/'/, "''") if option[:description] %> \
+    {<%= option[:names].join(",") %>}<%= quote(bracket(option[:description])) if option[:description] %> \
     <%- end -%>
     '*: :->rest'
 
