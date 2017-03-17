@@ -102,6 +102,14 @@ class Thor
       def bracket(s)
         %([#{s}])
       end
+
+      def escape_option_names(names)
+        if names.size == 1
+          names.first
+        else
+          "{" + names.join(",") + "}"
+        end
+      end
     end
   end
 end

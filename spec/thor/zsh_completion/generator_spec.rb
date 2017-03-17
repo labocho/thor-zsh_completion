@@ -25,6 +25,7 @@ describe Thor::ZshCompletion::Generator do
       class_option :global, desc: "Global option"
 
       desc "foo", "Description of foo"
+      option :verbose, aliases: :v, desc: "Write more logs"
       def foo
         p options
         puts "foo"

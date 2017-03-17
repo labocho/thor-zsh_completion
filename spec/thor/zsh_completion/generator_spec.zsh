@@ -45,7 +45,8 @@ __generator_spec() {
 
 __generator_spec_foo() {
   _arguments \
-    {--global}'[Global option]' \
+    --global'[Global option]' \
+    {--verbose,-v}'[Write more logs]' \
     '*: :->rest'
 
   case $state in
@@ -62,7 +63,7 @@ __generator_spec_nest1() {
   case $CURRENT in
     $DEPTH)
       _arguments \
-        {--global}'[Global option]' \
+        --global'[Global option]' \
         '*: :->subcommands'
 
       case $state in
