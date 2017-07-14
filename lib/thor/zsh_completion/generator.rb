@@ -51,6 +51,8 @@ class Thor
           subcommands: subcommand_metadata(thor)
         }
 
+        @rendered_functions = {}
+
         erb = File.read("#{File.dirname(__FILE__)}/template/main.erb")
         ERB.new(erb, nil, "-").result(binding)
       end
@@ -70,7 +72,12 @@ class Thor
         function_name = prefix.join("_")
         depth = prefix.size + 1
 
+        return '' if @rendered_functions[function_name]
+
         source << SUBCOMMAND_FUNCTION_TEMPLATE.result(binding)
+
+        @rendered_functions[function_name] = true
+
         subcommand[:subcommands].each do |subcommand|
           source << render_subcommand_function(subcommand, prefix: prefix)
         end
@@ -78,22 +85,33 @@ class Thor
       end
 
       def subcommand_metadata(thor)
-        thor.tasks.map do |(name, command)|
-          if subcommand_class = thor.subcommand_classes[name]
-            subcommands = subcommand_metadata(subcommand_class)
-          else
-            subcommands = []
-          end
-          cmd_name = command.name.gsub("_", "-")
-          { name: cmd_name,
-            safe_name: secure_function_name(cmd_name),
-            usage: command.usage,
-            description: command.description,
-            options: thor.class_options.map{|_, o| option_metadata(o) } +
-                     command.options.map{|(_, o)| option_metadata(o) },
-            subcommands: subcommands
-          }
+        result = []
+        thor.tasks.each do |(name, command)|
+          result << gen_command_information(thor, name, command)
         end
+        thor.map.each do |_alias, name|
+          next if ['-?', '-D', '--help'].include?(_alias)
+          command = thor.tasks[name.to_s.gsub('-', '_')] or next
+          result << gen_command_information(thor, _alias, command)
+        end
+        result.uniq! { |info| info[:name] }
+        result
+      end
+
+      def gen_command_information(thor, name, command)
+        if subcommand_class = thor.subcommand_classes[name]
+          subcommands = subcommand_metadata(subcommand_class)
+        else
+          subcommands = []
+        end
+        { name: name.gsub("_", "-"),
+          safe_name: secure_function_name(command.name),
+          usage: command.usage,
+          description: command.description,
+          options: thor.class_options.map{|_, o| option_metadata(o) } +
+                   command.options.map{|(_, o)| option_metadata(o) },
+          subcommands: subcommands
+        }
       end
 
       def option_metadata(option)

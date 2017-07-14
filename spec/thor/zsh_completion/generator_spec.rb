@@ -8,7 +8,7 @@ describe Thor::ZshCompletion::Generator do
         p options
         puts "baz"
       end
-      # map 'b' => 'baz'
+      map 'b' => 'baz'
 
       desc "foo-bar", "Dashed command"
       def foo_bar
