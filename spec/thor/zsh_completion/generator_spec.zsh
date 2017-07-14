@@ -124,6 +124,7 @@ __generator_spec_nest1_nest2() {
           _values \
             'subcommand' \
             'baz[Description of baz]' \
+            'foo-bar[Dashed command]' \
             'help[Describe subcommands or one specific subcommand]' \
             ;
           ;;
@@ -133,6 +134,9 @@ __generator_spec_nest1_nest2() {
       case $words[$DEPTH] in
         baz)
           __generator_spec_nest1_nest2_baz
+          ;;
+        foo-bar)
+          __generator_spec_nest1_nest2_foo_u_bar
           ;;
         help)
           __generator_spec_nest1_nest2_help
@@ -149,6 +153,18 @@ __generator_spec_nest1_nest2() {
 
 
 __generator_spec_nest1_nest2_baz() {
+  _arguments \
+    '*: :->rest'
+
+  case $state in
+    rest)
+      # complete rest arguments
+      _files
+      ;;
+  esac
+}
+
+__generator_spec_nest1_nest2_foo_u_bar() {
   _arguments \
     '*: :->rest'
 

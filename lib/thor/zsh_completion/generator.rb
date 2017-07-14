@@ -45,6 +45,7 @@ class Thor
 
         main = {
           name: "__#{name}",
+          safe_name: secure_function_name("__#{name}"),
           description: nil,
           options: [],
           subcommands: subcommand_metadata(thor)
@@ -55,12 +56,17 @@ class Thor
       end
 
       private
+
+      def secure_function_name(str)
+        str.gsub(/[^a-z0-9_]/, '_u_')
+      end
+
       def render_subcommand_function(subcommand, options = {})
         prefix = options[:prefix] || []
 
         source = []
 
-        prefix = (prefix + [subcommand[:name]])
+        prefix = (prefix + [subcommand[:safe_name]])
         function_name = prefix.join("_")
         depth = prefix.size + 1
 
@@ -78,7 +84,9 @@ class Thor
           else
             subcommands = []
           end
-          { name: command.name.gsub("_", "-"),
+          cmd_name = command.name.gsub("_", "-")
+          { name: cmd_name,
+            safe_name: secure_function_name(cmd_name),
             usage: command.usage,
             description: command.description,
             options: thor.class_options.map{|_, o| option_metadata(o) } +
