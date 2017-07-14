@@ -73,6 +73,7 @@ __generator_spec_nest1() {
             'bar[Description of bar]' \
             'nest2[Description of nest2]' \
             'help[Describe subcommands or one specific subcommand]' \
+            '-h[Describe subcommands or one specific subcommand]' \
             ;
           ;;
       esac
@@ -86,6 +87,9 @@ __generator_spec_nest1() {
           __generator_spec_nest1_nest2
           ;;
         help)
+          __generator_spec_nest1_help
+          ;;
+        -h)
           __generator_spec_nest1_help
           ;;
         *)
@@ -124,7 +128,10 @@ __generator_spec_nest1_nest2() {
           _values \
             'subcommand' \
             'baz[Description of baz]' \
+            'foo-bar[Dashed command]' \
             'help[Describe subcommands or one specific subcommand]' \
+            '-h[Describe subcommands or one specific subcommand]' \
+            'b[Description of baz]' \
             ;
           ;;
       esac
@@ -134,8 +141,17 @@ __generator_spec_nest1_nest2() {
         baz)
           __generator_spec_nest1_nest2_baz
           ;;
+        foo-bar)
+          __generator_spec_nest1_nest2_foo_bar
+          ;;
         help)
           __generator_spec_nest1_nest2_help
+          ;;
+        -h)
+          __generator_spec_nest1_nest2_help
+          ;;
+        b)
+          __generator_spec_nest1_nest2_baz
           ;;
         *)
           # if does not match any subcommand
@@ -149,6 +165,18 @@ __generator_spec_nest1_nest2() {
 
 
 __generator_spec_nest1_nest2_baz() {
+  _arguments \
+    '*: :->rest'
+
+  case $state in
+    rest)
+      # complete rest arguments
+      _files
+      ;;
+  esac
+}
+
+__generator_spec_nest1_nest2_foo_bar() {
   _arguments \
     '*: :->rest'
 

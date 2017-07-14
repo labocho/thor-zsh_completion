@@ -8,6 +8,13 @@ describe Thor::ZshCompletion::Generator do
         p options
         puts "baz"
       end
+      map 'b' => 'baz'
+
+      desc "foo-bar", "Dashed command"
+      def foo_bar
+        p options
+        puts "foo-bar"
+      end
     end
 
     nest1 = Class.new(Thor) do
