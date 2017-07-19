@@ -8,6 +8,7 @@ describe Thor::ZshCompletion::Generator do
         p options
         puts "baz"
       end
+      map 'ben' => 'baz'
     end
 
     nest1 = Class.new(Thor) do
