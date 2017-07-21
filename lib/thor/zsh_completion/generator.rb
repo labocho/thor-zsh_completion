@@ -2,6 +2,7 @@ class Thor
   module ZshCompletion
     class Generator
       SUBCOMMAND_FUNCTION_TEMPLATE = ERB.new(File.read("#{File.dirname(__FILE__)}/template/subcommand_function.erb"), nil, "-")
+      IGNORED_MAP_COMMANDS = %w(-? -D --help -h).freeze
       attr_reader :thor, :name
 
       def initialize(thor, name)
@@ -45,16 +46,20 @@ class Thor
 
         main = {
           name: "__#{name}",
+          function_name: "__#{name}",
           description: nil,
           options: [],
           subcommands: subcommand_metadata(thor)
         }
+
+        @rendered_functions = {}
 
         erb = File.read("#{File.dirname(__FILE__)}/template/main.erb")
         ERB.new(erb, nil, "-").result(binding)
       end
 
       private
+
       def render_subcommand_function(subcommand, options = {})
         prefix = options[:prefix] || []
 
@@ -64,7 +69,12 @@ class Thor
         function_name = prefix.join("_")
         depth = prefix.size + 1
 
+        return '' if @rendered_functions[function_name]
+
         source << SUBCOMMAND_FUNCTION_TEMPLATE.result(binding)
+
+        @rendered_functions[function_name] = true
+
         subcommand[:subcommands].each do |subcommand|
           source << render_subcommand_function(subcommand, prefix: prefix)
         end
@@ -72,20 +82,32 @@ class Thor
       end
 
       def subcommand_metadata(thor)
-        thor.tasks.map do |(name, command)|
-          if subcommand_class = thor.subcommand_classes[name]
-            subcommands = subcommand_metadata(subcommand_class)
-          else
-            subcommands = []
-          end
-          { name: command.name.gsub("_", "-"),
-            usage: command.usage,
-            description: command.description,
-            options: thor.class_options.map{|_, o| option_metadata(o) } +
-                     command.options.map{|(_, o)| option_metadata(o) },
-            subcommands: subcommands
-          }
+        result = []
+        thor.tasks.each do |(name, command)|
+          result << gen_command_information(thor, name, command)
         end
+        thor.map.each do |_alias, name|
+          next if IGNORED_MAP_COMMANDS.include?(_alias.to_s)
+          command = thor.tasks[name.to_s.gsub('-', '_')] or next
+          result << gen_command_information(thor, _alias, command)
+        end
+        result.uniq! { |info| info[:name] }
+        result
+      end
+
+      def gen_command_information(thor, name, command)
+        if subcommand_class = thor.subcommand_classes[name]
+          subcommands = subcommand_metadata(subcommand_class)
+        else
+          subcommands = []
+        end
+        { name: name.gsub("_", "-"),
+          usage: command.usage,
+          description: command.description,
+          options: thor.class_options.map{|_, o| option_metadata(o) } +
+                   command.options.map{|(_, o)| option_metadata(o) },
+          subcommands: subcommands
+        }
       end
 
       def option_metadata(option)
