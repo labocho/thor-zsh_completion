@@ -16,6 +16,9 @@
             'subcommand' \
             <%- subcommand[:subcommands].each do |subcommand| -%>
             <%= quote(subcommand[:name] + bracket(subcommand[:description])) %> \
+            <%- subcommand[:aliases].each do |_alias| -%>
+            <%= quote(_alias + bracket(subcommand[:description])) %> \
+            <%- end -%>
             <%- end -%>
             ;
           ;;
@@ -27,6 +30,11 @@
         <%= subcommand[:name] %>)
           <%= function_name %>_<%= subcommand[:name] %>
           ;;
+        <%- subcommand[:aliases].each do |_alias| -%>
+        <%= _alias %>)
+          <%= function_name %>_<%= subcommand[:name] %>
+          ;;
+        <%- end -%>
         <%- end -%>
         *)
           # if does not match any subcommand

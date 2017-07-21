@@ -1,10 +1,7 @@
-require "set"
-
 class Thor
   module ZshCompletion
     class Generator
       SUBCOMMAND_FUNCTION_TEMPLATE = ERB.new(File.read("#{File.dirname(__FILE__)}/template/subcommand_function.erb"), nil, "-")
-      IGNORED_MAP_COMMANDS = %w(-? -D --help -h).freeze
       attr_reader :thor, :name
 
       def initialize(thor, name)
@@ -53,8 +50,6 @@ class Thor
           subcommands: subcommand_metadata(thor)
         }
 
-        @rendered_function_names = Set.new
-
         erb = File.read("#{File.dirname(__FILE__)}/template/main.erb")
         ERB.new(erb, nil, "-").result(binding)
       end
@@ -69,11 +64,7 @@ class Thor
         function_name = prefix.join("_")
         depth = prefix.size + 1
 
-        return '' if @rendered_function_names.include?(function_name)
-
         source << SUBCOMMAND_FUNCTION_TEMPLATE.result(binding)
-
-        @rendered_function_names << function_name
 
         subcommand[:subcommands].each do |subcommand|
           source << render_subcommand_function(subcommand, prefix: prefix)
@@ -84,24 +75,22 @@ class Thor
       def subcommand_metadata(thor)
         result = []
         thor.tasks.each do |(name, command)|
-          result << generate_command_information(thor, name, command)
+          aliases = thor.map.select{|_, original_name|
+            name == original_name
+          }.map(&:first)
+          result << generate_command_information(thor, name, command, aliases)
         end
-        thor.map.each do |_alias, name|
-          next if IGNORED_MAP_COMMANDS.include?(_alias.to_s)
-          next unless command = thor.tasks[name.to_s.gsub('-', '_')]
-          result << generate_command_information(thor, _alias, command)
-        end
-        result.uniq!{|info| info[:name] }
         result
       end
 
-      def generate_command_information(thor, name, command)
+      def generate_command_information(thor, name, command, aliases)
         if subcommand_class = thor.subcommand_classes[name]
           subcommands = subcommand_metadata(subcommand_class)
         else
           subcommands = []
         end
-        { name: name.gsub("_", "-"),
+        { name: hyphenate(name),
+          aliases: aliases.map{|a| hyphenate(a) },
           usage: command.usage,
           description: command.description,
           options: thor.class_options.map{|_, o| option_metadata(o) } +
@@ -131,6 +120,10 @@ class Thor
         else
           "{" + names.join(",") + "}"
         end
+      end
+
+      def hyphenate(s)
+        s.gsub("_", "-")
       end
     end
   end
