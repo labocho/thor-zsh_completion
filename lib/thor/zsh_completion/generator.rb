@@ -1,3 +1,5 @@
+require "set"
+
 class Thor
   module ZshCompletion
     class Generator
@@ -46,20 +48,18 @@ class Thor
 
         main = {
           name: "__#{name}",
-          function_name: "__#{name}",
           description: nil,
           options: [],
           subcommands: subcommand_metadata(thor)
         }
 
-        @rendered_functions = {}
+        @rendered_function_names = Set.new
 
         erb = File.read("#{File.dirname(__FILE__)}/template/main.erb")
         ERB.new(erb, nil, "-").result(binding)
       end
 
       private
-
       def render_subcommand_function(subcommand, options = {})
         prefix = options[:prefix] || []
 
@@ -69,11 +69,11 @@ class Thor
         function_name = prefix.join("_")
         depth = prefix.size + 1
 
-        return '' if @rendered_functions[function_name]
+        return '' if @rendered_function_names.include?(function_name)
 
         source << SUBCOMMAND_FUNCTION_TEMPLATE.result(binding)
 
-        @rendered_functions[function_name] = true
+        @rendered_function_names << function_name
 
         subcommand[:subcommands].each do |subcommand|
           source << render_subcommand_function(subcommand, prefix: prefix)
@@ -84,18 +84,18 @@ class Thor
       def subcommand_metadata(thor)
         result = []
         thor.tasks.each do |(name, command)|
-          result << gen_command_information(thor, name, command)
+          result << generate_command_information(thor, name, command)
         end
         thor.map.each do |_alias, name|
           next if IGNORED_MAP_COMMANDS.include?(_alias.to_s)
-          command = thor.tasks[name.to_s.gsub('-', '_')] or next
-          result << gen_command_information(thor, _alias, command)
+          next unless command = thor.tasks[name.to_s.gsub('-', '_')]
+          result << generate_command_information(thor, _alias, command)
         end
-        result.uniq! { |info| info[:name] }
+        result.uniq!{|info| info[:name] }
         result
       end
 
-      def gen_command_information(thor, name, command)
+      def generate_command_information(thor, name, command)
         if subcommand_class = thor.subcommand_classes[name]
           subcommands = subcommand_metadata(subcommand_class)
         else
