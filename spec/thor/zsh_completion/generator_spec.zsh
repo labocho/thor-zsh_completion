@@ -1,7 +1,5 @@
 #compdef generator_spec
 
-local state
-
 _generator_spec() {
   __generator_spec
 }

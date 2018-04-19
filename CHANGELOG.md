@@ -1,3 +1,9 @@
+### 0.1.5
+
+Bugfixes
+
+- remove unnecessary `local state` in generated script. (reported by @aoyama-val)
+
 ### 0.1.4
 
 Bugfixes
