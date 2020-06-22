@@ -23,7 +23,7 @@ __generator_spec() {
       esac
       ;;
     *)
-      case $words[$DEPTH] in
+      case ${words[$DEPTH]} in
         foo)
           __generator_spec_foo
           ;;
@@ -76,7 +76,7 @@ __generator_spec_nest1() {
       esac
       ;;
     *)
-      case $words[$DEPTH] in
+      case ${words[$DEPTH]} in
         bar)
           __generator_spec_nest1_bar
           ;;
@@ -129,7 +129,7 @@ __generator_spec_nest1_nest2() {
       esac
       ;;
     *)
-      case $words[$DEPTH] in
+      case ${words[$DEPTH]} in
         baz)
           __generator_spec_nest1_nest2_baz
           ;;

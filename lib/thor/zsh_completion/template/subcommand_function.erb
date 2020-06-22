@@ -25,7 +25,7 @@
       esac
       ;;
     *)
-      case $words[$DEPTH] in
+      case ${words[$DEPTH]} in
         <%- subcommand[:subcommands].each do |subcommand| -%>
         <%= subcommand[:name] %>)
           <%= function_name %>_<%= subcommand[:name] %>
