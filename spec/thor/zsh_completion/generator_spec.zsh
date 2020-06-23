@@ -1,4 +1,6 @@
 #compdef generator_spec
+# shellcheck disable=SC2034
+# https://github.com/koalaman/shellcheck/wiki/SC2034
 
 _generator_spec() {
   __generator_spec
@@ -8,11 +10,11 @@ __generator_spec() {
   readonly local DEPTH=2
 
   case $CURRENT in
-    $DEPTH)
+    "$DEPTH")
       _arguments \
         '*: :->subcommands'
 
-      case $state in
+      case ${state:?} in
         subcommands)
           _values \
             'subcommand' \
@@ -23,7 +25,7 @@ __generator_spec() {
       esac
       ;;
     *)
-      case ${words[$DEPTH]} in
+      case ${words[$DEPTH]:?} in
         foo)
           __generator_spec_foo
           ;;
@@ -47,7 +49,7 @@ __generator_spec_foo() {
     {--verbose,-v}'[Write more logs]' \
     '*: :->rest'
 
-  case $state in
+  case ${state:?} in
     rest)
       # complete rest arguments
       _files
@@ -59,12 +61,12 @@ __generator_spec_nest1() {
   readonly local DEPTH=3
 
   case $CURRENT in
-    $DEPTH)
+    "$DEPTH")
       _arguments \
         --global'[Global option]' \
         '*: :->subcommands'
 
-      case $state in
+      case ${state:?} in
         subcommands)
           _values \
             'subcommand' \
@@ -76,7 +78,7 @@ __generator_spec_nest1() {
       esac
       ;;
     *)
-      case ${words[$DEPTH]} in
+      case ${words[$DEPTH]:?} in
         bar)
           __generator_spec_nest1_bar
           ;;
@@ -101,7 +103,7 @@ __generator_spec_nest1_bar() {
   _arguments \
     '*: :->rest'
 
-  case $state in
+  case ${state:?} in
     rest)
       # complete rest arguments
       _files
@@ -113,11 +115,11 @@ __generator_spec_nest1_nest2() {
   readonly local DEPTH=4
 
   case $CURRENT in
-    $DEPTH)
+    "$DEPTH")
       _arguments \
         '*: :->subcommands'
 
-      case $state in
+      case ${state:?} in
         subcommands)
           _values \
             'subcommand' \
@@ -129,7 +131,7 @@ __generator_spec_nest1_nest2() {
       esac
       ;;
     *)
-      case ${words[$DEPTH]} in
+      case ${words[$DEPTH]:?} in
         baz)
           __generator_spec_nest1_nest2_baz
           ;;
@@ -154,7 +156,7 @@ __generator_spec_nest1_nest2_baz() {
   _arguments \
     '*: :->rest'
 
-  case $state in
+  case ${state:?} in
     rest)
       # complete rest arguments
       _files
@@ -166,7 +168,7 @@ __generator_spec_nest1_nest2_help() {
   _arguments \
     '*: :->rest'
 
-  case $state in
+  case ${state:?} in
     rest)
       # complete rest arguments
       _files
@@ -178,7 +180,7 @@ __generator_spec_nest1_help() {
   _arguments \
     '*: :->rest'
 
-  case $state in
+  case ${state:?} in
     rest)
       # complete rest arguments
       _files

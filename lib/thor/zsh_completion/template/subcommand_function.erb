@@ -3,14 +3,14 @@
   readonly local DEPTH=<%= depth %>
 
   case $CURRENT in
-    $DEPTH)
+    "$DEPTH")
       _arguments \
         <%- subcommand[:options].each do |option| -%>
         <%= escape_option_names(option[:names]) %><%= quote(bracket(option[:description])) if option[:description] %> \
         <%- end -%>
         '*: :->subcommands'
 
-      case $state in
+      case ${state:?} in
         subcommands)
           _values \
             'subcommand' \
@@ -25,7 +25,7 @@
       esac
       ;;
     *)
-      case ${words[$DEPTH]} in
+      case ${words[$DEPTH]:?} in
         <%- subcommand[:subcommands].each do |subcommand| -%>
         <%= subcommand[:name] %>)
           <%= function_name %>_<%= subcommand[:name] %>
@@ -53,7 +53,7 @@
     <%- end -%>
     '*: :->rest'
 
-  case $state in
+  case ${state:?} in
     rest)
       # complete rest arguments
       _files
