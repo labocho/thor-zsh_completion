@@ -47,7 +47,7 @@ class Thor
           name: "__#{name}",
           description: nil,
           options: [],
-          subcommands: subcommand_metadata(thor)
+          subcommands: subcommand_metadata(thor),
         }
 
         erb = File.read("#{File.dirname(__FILE__)}/template/main.erb")
@@ -66,8 +66,8 @@ class Thor
 
         source << SUBCOMMAND_FUNCTION_TEMPLATE.result(binding)
 
-        subcommand[:subcommands].each do |subcommand|
-          source << render_subcommand_function(subcommand, prefix: prefix)
+        subcommand[:subcommands].each do |nested|
+          source << render_subcommand_function(nested, prefix: prefix)
         end
         source.join("\n").strip + "\n"
       end
@@ -75,7 +75,7 @@ class Thor
       def subcommand_metadata(thor)
         result = []
         thor.tasks.each do |(name, command)|
-          aliases = thor.map.select{|_, original_name|
+          aliases = thor.map.select {|_, original_name|
             name == original_name
           }.map(&:first)
           result << generate_command_information(thor, name, command, aliases)
@@ -84,25 +84,23 @@ class Thor
       end
 
       def generate_command_information(thor, name, command, aliases)
-        if subcommand_class = thor.subcommand_classes[name]
-          subcommands = subcommand_metadata(subcommand_class)
+        subcommands = if (subcommand_class = thor.subcommand_classes[name])
+          subcommand_metadata(subcommand_class)
         else
-          subcommands = []
+          []
         end
-        { name: hyphenate(name),
-          aliases: aliases.map{|a| hyphenate(a) },
-          usage: command.usage,
-          description: command.description,
-          options: thor.class_options.map{|_, o| option_metadata(o) } +
-                   command.options.map{|(_, o)| option_metadata(o) },
-          subcommands: subcommands
-        }
+        {name: hyphenate(name),
+         aliases: aliases.map {|a| hyphenate(a) },
+         usage: command.usage,
+         description: command.description,
+         options: thor.class_options.map {|_, o| option_metadata(o) } +
+           command.options.map {|(_, o)| option_metadata(o) },
+         subcommands: subcommands,}
       end
 
       def option_metadata(option)
-        { names: ["--#{option.name}"] + option.aliases.map{|a| "-#{a}" },
-          description: option.description,
-        }
+        {names: ["--#{option.name}"] + option.aliases.map {|a| "-#{a}" },
+         description: option.description,}
       end
 
       def quote(s)

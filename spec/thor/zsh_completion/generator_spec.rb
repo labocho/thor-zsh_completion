@@ -8,7 +8,7 @@ describe Thor::ZshCompletion::Generator do
         p options
         puts "baz"
       end
-      map 'ben' => 'baz'
+      map "ben" => "baz"
     end
 
     nest1 = Class.new(Thor) do
@@ -22,7 +22,7 @@ describe Thor::ZshCompletion::Generator do
       subcommand "nest2", nest2
     end
 
-    main = Class.new(Thor) do
+    Class.new(Thor) do
       class_option :global, desc: "Global option"
 
       desc "foo", "Description of foo"

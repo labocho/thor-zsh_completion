@@ -1,2 +1,2 @@
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'thor/zsh_completion'
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+require "thor/zsh_completion"
