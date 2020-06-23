@@ -1,3 +1,9 @@
+### Unreleased
+
+Misc
+
+- fix the generation of zsh completion scripts to prevent [ShellCheck](https://www.shellcheck.net/) warnings (@joehorsnell)†verz
+
 ### 0.1.5
 
 Bugfixes
