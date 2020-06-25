@@ -1,8 +1,14 @@
+### 0.1.7
+
+Misc
+
+- fix the generation of zsh completion scripts to prevent all [ShellCheck](https://www.shellcheck.net/) warnings
+
 ### 0.1.6
 
 Misc
 
-- fix the generation of zsh completion scripts to prevent [ShellCheck](https://www.shellcheck.net/) warnings (@joehorsnell)†verz
+- fix the generation of zsh completion scripts to prevent [ShellCheck](https://www.shellcheck.net/) warnings (@joehorsnell)
 
 ### 0.1.5
 
