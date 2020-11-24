@@ -1,3 +1,9 @@
+### 0.1.8
+
+Misc
+
+- update `thor` dependency
+
 ### 0.1.7
 
 Misc
