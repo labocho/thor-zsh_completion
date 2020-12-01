@@ -1,3 +1,9 @@
+### 0.1.9
+
+Bugfixes
+
+- fix file mode to avoid LoadError on the gem installed by another user (reported by @belden)
+
 ### 0.1.8
 
 Misc
