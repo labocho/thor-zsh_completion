@@ -2,7 +2,7 @@
 
 Bugfixes
 
-- fix file mode to avoid LoadError on the gem installed by another user (reported by @belden)
+- fix file mode to avoid LoadError on the gem installed by another user (reported by @gisenberg)
 
 ### 0.1.8
 
