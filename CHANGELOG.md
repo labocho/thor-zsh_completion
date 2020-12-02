@@ -1,8 +1,14 @@
+### 0.1.10
+
+Misc
+
+- update hat-tip of 0.1.9 CHANGELOG.md entry
+
 ### 0.1.9
 
 Bugfixes
 
-- fix file mode to avoid LoadError on the gem installed by another user (reported by @belden)
+- fix file mode to avoid LoadError on the gem installed by another user (reported by @gisenberg)
 
 ### 0.1.8
 
