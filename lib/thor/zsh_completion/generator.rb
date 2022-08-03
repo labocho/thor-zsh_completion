@@ -1,7 +1,7 @@
 class Thor
   module ZshCompletion
     class Generator
-      SUBCOMMAND_FUNCTION_TEMPLATE = ERB.new(File.read("#{File.dirname(__FILE__)}/template/subcommand_function.erb"), nil, "-")
+      SUBCOMMAND_FUNCTION_TEMPLATE = ERB.new(File.read("#{File.dirname(__FILE__)}/template/subcommand_function.erb"), trim_mode: "-")
       attr_reader :thor, :name
 
       def initialize(thor, name)
@@ -51,7 +51,7 @@ class Thor
         }
 
         erb = File.read("#{File.dirname(__FILE__)}/template/main.erb")
-        ERB.new(erb, nil, "-").result(binding)
+        ERB.new(erb, trim_mode: "-").result(binding)
       end
 
       private

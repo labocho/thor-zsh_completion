@@ -3,6 +3,7 @@ AllCops:
     - bin/*
     - node_modules/**/*
   NewCops: enable
+  TargetRubyVersion: 2.6
 
 Layout/CaseIndentation:
   EnforcedStyle: end
@@ -103,6 +104,9 @@ Style/PercentLiteralDelimiters:
     '%r': '()'
 
 Style/SpecialGlobalVars:
+  Enabled: false
+
+Style/StringConcatenation:
   Enabled: false
 
 Style/StringLiterals:
